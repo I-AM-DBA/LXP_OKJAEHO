@@ -18,14 +18,15 @@ public class CuriRepository {
 
     public List<Curi> findAll() {
         List<Curi> curis = new ArrayList<>();
-        String sql = QueryUtil.getQuery("curi.allSelect");
+        String sql = QueryUtil.getQuery("curri.allSelect");
 
         try (PreparedStatement ps = connection.prepareStatement(sql);
                 ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                Curi curi = new Curi(rs.getLong("crui_no"), rs.getString("curi_name"),
+                Curi curi = new Curi(rs.getLong("curri_no"), rs.getString("curri_name"),
                         rs.getString("depth1_name"), rs.getString("depth2_name"),
                         rs.getBoolean("success"), rs.getString("depth2_time"));
+                curis.add(curi);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
