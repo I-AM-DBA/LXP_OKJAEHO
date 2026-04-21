@@ -13,8 +13,8 @@
   <query key="course.delete">
     DELETE FROM courses WHERE author_id = ?;
   </query>
-  <query key="curi.allSelect">
-    SELECT * FROM curi
+  <query key="curri.allSelect">
+    SELECT * FROM curri
   </query>
 
 </properties>
