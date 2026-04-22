@@ -3,32 +3,40 @@ package com.lxp.course.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Course {
-    // 1. courses 테이블 관련
+public class Section {
+
+    // 2. sections 테이블 관련
+    private Long sectionId;
     private Long courseId;
-    private String courseName;
-    private String description;
-    // LocalDateTime를 써야한다고 gpt가 그러는데 뭔지 몰라서 Long으로 합니다
+    private String sectionName;
     private Long createdAt;
     private Long updatedAt;
     private Long deleted_at;
     private boolean isPublic;
     private boolean isDeleted;
-    private List<Section> sections = new ArrayList<>();
+    private List<Content> contents = new ArrayList<>();
 
-    public Course() {
+    public Section() {
     }
 
-    public Course(Long courseId, String courseName, String description, Long createdAt,
+    public Section(Long sectionId, Long courseId, String sectionName, Long createdAt,
             Long updatedAt, Long deleted_at, boolean isPublic, boolean isDeleted) {
+        this.sectionId = sectionId;
         this.courseId = courseId;
-        this.courseName = courseName;
-        this.description = description;
+        this.sectionName = sectionName;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deleted_at = deleted_at;
         this.isPublic = isPublic;
         this.isDeleted = isDeleted;
+    }
+
+    public Long getSectionId() {
+        return sectionId;
+    }
+
+    public void setSectionId(Long sectionId) {
+        this.sectionId = sectionId;
     }
 
     public Long getCourseId() {
@@ -39,28 +47,12 @@ public class Course {
         this.courseId = courseId;
     }
 
-    public List<Section> getSections() {
-        return sections;
+    public String getSectionName() {
+        return sectionName;
     }
 
-    public void setSections(List<Section> sections) {
-        this.sections = sections;
-    }
-
-    public String getCourseName() {
-        return courseName;
-    }
-
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setSectionName(String sectionName) {
+        this.sectionName = sectionName;
     }
 
     public Long getCreatedAt() {
@@ -103,5 +95,11 @@ public class Course {
         isDeleted = deleted;
     }
 
-}
+    public List<Content> getContents() {
+        return contents;
+    }
 
+    public void setContents(List<Content> contents) {
+        this.contents = contents;
+    }
+}
