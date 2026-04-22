@@ -1,4 +1,4 @@
-package com.lxp.curi.model;
+package com.lxp.course.model;
 
 public class Curi {
     private Long curiNo;

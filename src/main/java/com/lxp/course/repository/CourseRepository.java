@@ -1,36 +1,52 @@
-package com.lxp.curi.repository;
+package com.lxp.course.repository;
 
-import com.lxp.curi.model.Curi;
+import com.lxp.course.model.Content;
+import com.lxp.course.model.Course;
+import com.lxp.course.model.Section;
 import com.lxp.util.QueryUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-public class CuriRepository {
+public class CourseRepository {
     private final Connection connection;
 
-    public CuriRepository(Connection connection) {
+    public CourseRepository(Connection connection) {
         this.connection = connection;
     }
 
-    public List<Curi> findAll() {
-        List<Curi> curis = new ArrayList<>();
-        String sql = QueryUtil.getQuery("curri.allSelect");
+    public List<Course> findAll() {
+        String sql = QueryUtil.getQuery("course.allSelect");
+        Map<Long, Course> courseMap = new LinkedHashMap<>();
 
         try (PreparedStatement ps = connection.prepareStatement(sql);
                 ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                Curi curi = new Curi(rs.getLong("curri_no"), rs.getString("curri_name"),
-                        rs.getString("depth1_name"), rs.getString("depth2_name"),
-                        rs.getBoolean("success"), rs.getString("depth2_time"));
-                curis.add(curi);
+                Long courseId = rs.getLong("course_id");
+
+                Course course = new Course();
+                course.setCourseId(courseId);
+                course.setCourseName(rs.getString("course_name"));
+                courseMap.put(courseId, course);
+
+                Section section = new Section();
+                section.setSectionName(rs.getString("section_name"));
+
+                Content content = new Content();
+                content.setContentName(rs.getString("content_name"));
+                content.setContentData(rs.getString("content_data"));
+
+                section.contentAdd(content);
+                course.sectionAdd(section);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return curis;
+        return new ArrayList<>(courseMap.values());
     }
 }

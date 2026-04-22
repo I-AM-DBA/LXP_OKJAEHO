@@ -1,32 +1,32 @@
-package com.lxp.curi.service;
+package com.lxp.course.service;
 
 import com.lxp.config.JDBCConnection;
-import com.lxp.curi.model.Curi;
-import com.lxp.curi.repository.CuriRepository;
+import com.lxp.course.model.Course;
+import com.lxp.course.repository.CourseRepository;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-public class CuriService {
+public class CourseService {
 
-    private final CuriRepository curiRepository;
+    private final CourseRepository courseRepository;
     private final Connection connection;
 
-    public CuriService() {
+    public CourseService() {
         try {
             this.connection = JDBCConnection.getConnection();
-            this.curiRepository = new CuriRepository(connection);
+            this.courseRepository = new CourseRepository(connection);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public List<Curi> lxpFindAll() throws Exception {
-        List<Curi> curis = curiRepository.findAll();
-        if (curis == null) {
-            throw new Exception("커리큘럼을 조회하는데 실패했더요");
+    public List<Course> courseFindAll() throws Exception {
+        List<Course> courses = courseRepository.findAll();
+        if (courses == null) {
+            throw new Exception("강의를 조회하는데 실패했더요");
         } else {
-            return curis;
+            return courses;
         }
     }
 }
