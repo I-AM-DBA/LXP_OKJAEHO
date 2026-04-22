@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <properties>
-  <query key="course.save">
-    INSERT INTO courses (author_id, title, description, status)
-    VALUES (?, ?, ?, ?)
+  <query key="course.allSelect">
+    select c.course_name,
+    s.section_name,
+    ct.content_name,
+    ct.content_data
+    from courses c
+    left join sections s on c.course_id = s.course_id
+    left join contents ct on s.course_id = ct.course_id;
   </query>
-  <query key="course.select">
-    SELECT * FROM courses WHERE author_id = ?
-  </query>
-  <query key="course.update">
-    UPDATE courses SET title = ? WHERE author_id = ?
-  </query>
-  <query key="course.delete">
-    DELETE FROM courses WHERE author_id = ?;
-  </query>
-  <query key="curri.allSelect">
-    SELECT * FROM curri
-  </query>
-
 </properties>
