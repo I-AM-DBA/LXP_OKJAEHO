@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <properties>
   <query key="course.allSelect">
-    select c.course_name,
+    select
+    c.course_id,
+    c.course_name,
     s.section_name,
     ct.content_name,
     ct.content_data
