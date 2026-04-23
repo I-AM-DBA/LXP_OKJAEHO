@@ -36,4 +36,12 @@ public class CourseController {
             throw new RuntimeException(e);
         }
     }
+
+    public void courseInsert(String courseName, String sectionName, String contentName,
+            String contentData) throws Exception {
+        Long courses =
+                courseService.courseInsert(courseName, sectionName, contentName, contentData);
+
+
+    }
 }

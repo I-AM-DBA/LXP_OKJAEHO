@@ -1,5 +1,7 @@
 package com.lxp.course.model;
 
+import java.time.LocalDateTime;
+
 public class Content {
 
     private Long contentId;
@@ -8,9 +10,9 @@ public class Content {
     private String contentName;
     private String contentData;
     private Long contentTime;
-    private Long createdAt;
-    private Long updatedAt;
-    private Long deletedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
     private boolean isPublic;
     private boolean isDeleted;
     private boolean isFree;

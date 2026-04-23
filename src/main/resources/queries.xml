@@ -11,4 +11,13 @@
     left join sections s on c.course_id = s.course_id
     left join contents ct on s.course_id = ct.course_id;
   </query>
+  <query key="course.courseInsert">
+    INSERT INTO courses(course_name) VALUES (?);
+  </query>
+  <query key="course.sectionInsert">
+    INSERT INTO sections(course_id, section_name) VALUES (?, ?);
+  </query>
+  <query key="course.contentInsert">
+    INSERT INTO contents(course_id, section_id, content_name, content_data) VALUES (?,?,?,?);
+  </query>
 </properties>
