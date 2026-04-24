@@ -43,7 +43,7 @@ public class CourseRepository {
                 content.setContentData(rs.getString("content_data"));
 
                 section.contentAdd(content);
-                course.sectionAdd(section);
+                course.addSection(section);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -51,58 +51,65 @@ public class CourseRepository {
         return new ArrayList<>(courseMap.values());
     }
 
-    public Long courseInsert(String courseName, String sectionName, String contentName,
-            String contentData) {
+    public String insert(Course insertCourse) {
         String courseSQL = QueryUtil.getQuery("course.courseInsert");
         String sectionSQL = QueryUtil.getQuery("course.sectionInsert");
         String contentSQL = QueryUtil.getQuery("course.contentInsert");
 
+        Long courseId; // section , content에는 course_id에 맞는 넣어야하기 때문에
         try {
-            // course insert
-            Long courseId = 0L;
+            courseId = 0L;
             try (PreparedStatement ps = connection.prepareStatement(courseSQL,
                     Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, courseName);
+                ps.setString(1, insertCourse.getCourseName());
 
                 int affectedRows = ps.executeUpdate();
 
                 if (affectedRows > 0) {
                     try (ResultSet rs = ps.getGeneratedKeys()) {
-                        if (rs.next()) {
-                            courseId = rs.getLong(1);
+                        if (!rs.next()) {
+                            throw new SQLException("강의 저장이 안됐습니다");
                         }
+                        courseId = rs.getLong(1);
                     }
                 }
             }
+            for (Section section : insertCourse.getSections()) {
+                String sectionName = section.getSectionName();
 
-            // section insert
-            Long sectionId = 0L;
-            try (PreparedStatement ps = connection.prepareStatement(sectionSQL,
-                    Statement.RETURN_GENERATED_KEYS)) {
-                ps.setLong(1, courseId);
-                ps.setString(2, sectionName);
-                ps.executeUpdate();
+                Long sectionId = 0L;
+                try (PreparedStatement ps = connection.prepareStatement(sectionSQL,
+                        Statement.RETURN_GENERATED_KEYS)) {
+                    ps.setLong(1, courseId);
+                    ps.setString(2, sectionName);
+                    ps.executeUpdate();
 
-                try (ResultSet rs = ps.getGeneratedKeys()) {
-                    if (!rs.next()) {
-                        throw new SQLException("저장이 안됐습니다");
-                    }
-                    sectionId = rs.getLong(1);
-                }
-            }
-            try (PreparedStatement ps = connection.prepareStatement(contentSQL,
-                    Statement.RETURN_GENERATED_KEYS)) {
-                ps.setLong(1, courseId);
-                ps.setLong(2, sectionId);
-                ps.setString(3, contentName);
-                ps.setString(4, contentData);
-
-                int affectedRows = ps.executeUpdate();
-
-                if (affectedRows > 0) {
                     try (ResultSet rs = ps.getGeneratedKeys()) {
-                        if (rs.next()) {
-                            return rs.getLong(1);
+                        if (!rs.next()) {
+                            throw new SQLException("섹션 저장이 안됐습니다");
+                        }
+                        sectionId = rs.getLong(1);
+                    }
+                }
+
+                for (Content content : section.getContents()) {
+                    String contentName = content.getContentName();
+                    String contentData = content.getContentData();
+                    try (PreparedStatement ps = connection.prepareStatement(contentSQL,
+                            Statement.RETURN_GENERATED_KEYS)) {
+                        ps.setLong(1, courseId);
+                        ps.setLong(2, sectionId);
+                        ps.setString(3, contentName);
+                        ps.setString(4, contentData);
+
+                        int affectedRows = ps.executeUpdate();
+
+                        if (affectedRows > 0) {
+                            try (ResultSet rs = ps.getGeneratedKeys()) {
+                                if (!rs.next()) {
+                                    throw new SQLException("콘텐츠 저장이 안됐습니다");
+                                }
+                            }
                         }
                     }
                 }
@@ -110,6 +117,7 @@ public class CourseRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return null;
+        String result = insertCourse.getCourseName();
+        return result;
     }
 }

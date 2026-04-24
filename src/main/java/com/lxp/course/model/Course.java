@@ -19,7 +19,19 @@ public class Course {
     public Course() {
     }
 
-    public void sectionAdd(Section section) {
+    public Course(String courseName, String sectionName, String contentName, String contentData) {
+        this.courseName = courseName;
+
+        Content content = new Content(contentName, contentData);
+        Section section = new Section(sectionName);
+        section.getContents().add(content);
+
+        this.sections.add(section);
+
+    }
+
+
+    public void addSection(Section section) {
         if (this.sections == null) {
             this.sections = new ArrayList<>();
         }

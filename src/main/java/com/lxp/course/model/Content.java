@@ -20,6 +20,11 @@ public class Content {
     public Content() {
     }
 
+    public Content(String contentName, String contentData) {
+        this.contentName = contentName;
+        this.contentData = contentData;
+    }
+
     public String getContentName() {
         return contentName;
     }

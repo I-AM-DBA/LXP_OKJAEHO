@@ -2,6 +2,7 @@ package com.lxp;
 
 import com.lxp.config.JDBCConnection;
 import com.lxp.course.controller.CourseController;
+import com.lxp.course.model.Course;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -66,13 +67,10 @@ public class Application {
                 System.out.print("컨텐츠 설명을 입력하세요.");
                 String contentData = sc.nextLine();
 
-                courseController.courseInsert(courseName, sectionName, contentName, contentData);
+                courseController.insertCourse(
+                        new Course(courseName, sectionName, contentName, contentData));
             }
         }
-    }
-
-    private static void course(String courseName) {
-
     }
 }
 

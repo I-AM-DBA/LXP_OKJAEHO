@@ -19,6 +19,10 @@ public class Section {
     public Section() {
     }
 
+    public Section(String sectionName) {
+        this.sectionName = sectionName;
+    }
+
     public void contentAdd(Content content) {
         if (this.contents == null) {
             this.contents = new ArrayList<>();

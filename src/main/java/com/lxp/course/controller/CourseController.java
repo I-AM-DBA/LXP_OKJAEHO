@@ -26,8 +26,10 @@ public class CourseController {
                             String contentName = content.getContentName();
                             String contentData = content.getContentData();
 
-                            System.out.println(courseId + courseName + sectionName + contentName
-                                    + contentData);
+                            System.out.println(
+                                    "강의 ID : " + courseId + "강의명 : " + courseName + "섹션명 : "
+                                            + sectionName + "콘텐츠 명 : " + contentName + "콘텐츠 내용 : "
+                                            + contentData);
                         }
                     }
                 }
@@ -37,11 +39,24 @@ public class CourseController {
         }
     }
 
-    public void courseInsert(String courseName, String sectionName, String contentName,
-            String contentData) throws Exception {
-        Long courses =
-                courseService.courseInsert(courseName, sectionName, contentName, contentData);
-
-
+    public void insertCourse(Course course) {
+        if (course == null) {
+            throw new IllegalArgumentException("저장할 정보가 없습니다");
+        } else if (course.getCourseName() == null) {
+            throw new IllegalArgumentException("강의 정보가 없습니다");
+        } else if (course.getSections() == null) {
+            throw new IllegalArgumentException("섹션 정보가 없습니다.");
+        }
+        for (Section section : course.getSections()) {
+            if (section.getContents() == null) {
+                throw new IllegalArgumentException("콘텐츠 정보가 없습니다.");
+            }
+        }
+        try {
+            String result = courseService.insertCourseAll(course);
+            System.out.println("강의 등록 결과 : " + result);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
