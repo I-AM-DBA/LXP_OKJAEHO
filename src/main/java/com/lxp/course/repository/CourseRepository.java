@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -48,5 +49,67 @@ public class CourseRepository {
             throw new RuntimeException(e);
         }
         return new ArrayList<>(courseMap.values());
+    }
+
+    public Long courseInsert(String courseName, String sectionName, String contentName,
+            String contentData) {
+        String courseSQL = QueryUtil.getQuery("course.courseInsert");
+        String sectionSQL = QueryUtil.getQuery("course.sectionInsert");
+        String contentSQL = QueryUtil.getQuery("course.contentInsert");
+
+        try {
+            // course insert
+            Long courseId = 0L;
+            try (PreparedStatement ps = connection.prepareStatement(courseSQL,
+                    Statement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, courseName);
+
+                int affectedRows = ps.executeUpdate();
+
+                if (affectedRows > 0) {
+                    try (ResultSet rs = ps.getGeneratedKeys()) {
+                        if (rs.next()) {
+                            courseId = rs.getLong(1);
+                        }
+                    }
+                }
+            }
+
+            // section insert
+            Long sectionId = 0L;
+            try (PreparedStatement ps = connection.prepareStatement(sectionSQL,
+                    Statement.RETURN_GENERATED_KEYS)) {
+                ps.setLong(1, courseId);
+                ps.setString(2, sectionName);
+                ps.executeUpdate();
+
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (!rs.next()) {
+                        throw new SQLException("저장이 안됐습니다");
+                    }
+                    sectionId = rs.getLong(1);
+                }
+            }
+            try (PreparedStatement ps = connection.prepareStatement(contentSQL,
+                    Statement.RETURN_GENERATED_KEYS)) {
+                ps.setLong(1, courseId);
+                ps.setLong(2, sectionId);
+                ps.setString(3, contentName);
+                ps.setString(4, contentData);
+
+                int affectedRows = ps.executeUpdate();
+
+                if (affectedRows > 0) {
+                    try (ResultSet rs = ps.getGeneratedKeys()) {
+                        if (rs.next()) {
+                            return rs.getLong(1);
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 }
